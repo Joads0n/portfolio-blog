@@ -1,6 +1,6 @@
 {
   "development": {
-    "username": "db_joadson",
+    "username": "joadson",
     "password": "1234",
     "database": "portfolio_blog",
     "host": "127.0.0.1",
