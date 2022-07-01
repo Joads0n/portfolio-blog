@@ -27,14 +27,14 @@ class UserController {
   static async createUser(req, res) {
     const { name, birthdate, email, password, role_id } = req.body;
     const formattedDate = birthdate.split("/").reverse().join("-");
-    
+
     try {
       const user = await models.User.create({
         name,
         birthdate: formattedDate,
         email,
         password,
-        role_id: Number(role_id)
+        role_id: Number(role_id),
       });
       return res.status(201).json({ user });
     } catch (error) {
@@ -49,20 +49,35 @@ class UserController {
     try {
       await models.User.update(data, {
         where: {
-          id
-        }
+          id,
+        },
       });
       const updatedUser = await models.User.findAll({
         where: {
           id: id,
         },
       });
-      return res.status(201).json({ updatedUser }); 
+      return res.status(201).json({ updatedUser });
     } catch (error) {
       return res.status(500).json({ Error: error.message });
     }
   }
-
+  
+  static async deleteUser(req, res) {
+    const { id } = req.params;
+    try {
+      models.User.destroy({
+        where: {
+          id,
+        },
+      });
+      return res
+        .status(201)
+        .json(`Usuário de id = ${id} foi deletado com sucesso`);
+    } catch (error) {
+      return res.status(500).json({ Error: error.message });
+    }
+  }
 }
 
 module.exports = UserController;
