@@ -1,12 +1,13 @@
 const express = require('express');
+const routes = require('./routes');
 
 const app = express()
 
-app.get('/', (req, res) => {
-    res.send('Hello Word')
-});
+routes(app)
 
 app.listen(3000, () => {
     console.log('SERVER ON');
 })
+
+module.exports = app;
 
