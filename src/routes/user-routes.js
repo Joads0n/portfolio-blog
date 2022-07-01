@@ -6,5 +6,5 @@ const router = Router();
 router
   .get("/usuarios", UserController.listUsers)
   .get("/usuario/:id", UserController.findUserId)
-
+  .post("/cadastro", UserController.createUser)
 module.exports = router;
