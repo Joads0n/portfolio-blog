@@ -41,9 +41,28 @@ class UserController {
       return res.status(500).json({ Error: error.message });
     }
   }
-  
-  
-  
+
+  static async updateUser(req, res) {
+    const { id } = req.params;
+    const data = req.body;
+
+    try {
+      await models.User.update(data, {
+        where: {
+          id
+        }
+      });
+      const updatedUser = await models.User.findAll({
+        where: {
+          id: id,
+        },
+      });
+      return res.status(201).json({ updatedUser }); 
+    } catch (error) {
+      return res.status(500).json({ Error: error.message });
+    }
+  }
+
 }
 
 module.exports = UserController;
