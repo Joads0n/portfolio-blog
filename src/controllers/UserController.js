@@ -66,14 +66,17 @@ class UserController {
   static async deleteUser(req, res) {
     const { id } = req.params;
     try {
-      models.User.destroy({
-        where: {
-          id,
-        },
-      });
-      return res
-        .status(201)
-        .json(`Usuário de id = ${id} foi deletado com sucesso`);
+      models.sequelize.transaction(async transaction => {
+        models.User.destroy({
+          where: {
+            id,
+          },
+        }, { transaction: transaction});
+        return res
+          .status(200)
+          .json(`Usuário de id = ${id} foi deletado com sucesso`);
+        
+      })
     } catch (error) {
       return res.status(500).json({ Error: error.message });
     }
@@ -88,6 +91,23 @@ class UserController {
         },
       });
       return res.status(201).json(`Usuário de id = ${id} foi restaurado com sucesso`);
+    } catch (error) {
+      return res.status(500).json({ Error: error.message });
+    }
+  }
+
+  static async getPoststoUser(req, res) {
+    const { editorId } = req.params;
+    console.log(editorId);
+    try {
+      const allPostUser = await models.Post.findAndCountAll({
+        where: {
+          editor_id: Number(editorId),
+        },
+        limit: 5,
+        order: [['createdAt', 'DESC']]
+      });
+      return res.status(200).json(allPostUser);
     } catch (error) {
       return res.status(500).json({ Error: error.message });
     }
