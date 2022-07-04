@@ -1,5 +1,5 @@
 const models = require('../models');
-
+const User = require('../models/user')
 class UserController {
   static async listUsers(req, res) {
     try {
@@ -29,13 +29,15 @@ class UserController {
     const formattedDate = birthdate.split('/').reverse().join('-');
 
     try {
+      const passwordHash = await models.User.addPassword(password);
       const user = await models.User.create({
         name,
         birthdate: formattedDate,
         email,
-        password,
+        password: passwordHash,
         role_id: Number(role_id),
       });
+      
       return res.status(201).json(user);
     } catch (error) {
       return res.status(500).json({ Error: error.message });
