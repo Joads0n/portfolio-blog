@@ -78,6 +78,20 @@ class UserController {
       return res.status(500).json({ Error: error.message });
     }
   }
+
+  static async restoreUser(req, res) {
+    const { id } = req.params;
+    try {
+      models.User.restore({
+        where: {
+          id,
+        },
+      });
+      return res.status(201).json(`Usuário de id = ${id} foi restaurado com sucesso`);
+    } catch (error) {
+      return res.status(500).json({ Error: error.message });
+    }
+  }
 }
 
 module.exports = UserController;
