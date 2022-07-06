@@ -29,17 +29,24 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async buscarEmail(email) {
-      const resultEmail = await User.findOne({
+      const user = await User.findOne({
         where: {
           email: email,
         },
       });
-      if (resultEmail === null) {
+      if(user === null) {
         throw new Error("Email não localizado na base de dados");
       }
-      return resultEmail;
+      return user;
     }
 
+    static async getUserById(id) {
+      const user = await User.findByPk(id);
+      if (user === null) {
+        throw new Error("Não foi possível encontrar o usuário");
+      }
+      return user;
+    }
   }
 
   User.init(

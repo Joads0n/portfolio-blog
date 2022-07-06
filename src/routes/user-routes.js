@@ -1,10 +1,15 @@
-const { Router } = require('express');
 const passport = require('passport');
+const { Router } = require('express');
 const UserController = require('../controllers/UserController');
+
 const router = Router();
 
 router
-  .get("/usuarios", UserController.listUsers)
+  .get(
+    "/usuarios",
+    passport.authenticate("bearer", { session: false }),
+    UserController.listUsers
+  )
   .get("/usuario/:id", UserController.findUserId)
   .get("/usuario/:editorId/posts", UserController.getPoststoUser)
   .post("/cadastro", UserController.createUser)
@@ -15,7 +20,7 @@ router
     "/usuario/login",
     passport.authenticate("local", { session: false }),
     UserController.login
-  )
+  );
 
   
 module.exports = router;
