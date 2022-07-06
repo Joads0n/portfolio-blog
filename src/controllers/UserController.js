@@ -1,7 +1,11 @@
 const models = require('../models');
+const jwt = require('jsonwebtoken');
+
 const User = require('../models/user');
 
+
 class UserController {
+  
   static async listUsers(req, res) {
     try {
       const users = await models.User.findAll();
@@ -119,25 +123,26 @@ class UserController {
       return res.status(500).json({ Error: error.message });
     }
   }
-
-  static async login(req, res) {
-    res.status(204).send();
+  
+  static degub() {
+    console.log('função de debug')
   }
 
-  // static async findEmail(req, res) {
-  //   const { email } = req.body;
-  //   console.log(`email ${email}`)
-  //   try {
-  //     const user = await models.User.findOne({
-  //       where: {
-  //         email: email
-  //       },
-  //     });
-  //     return res.status(200).json(user.birthdate);
-  //   } catch (error) {
-  //     return res.status(500).json({ Error: error.message });
-  //   }
-  // }
+  static async login(req, res) {
+    const token = UserController.createTokenJWT(req.user);
+    res.set('Authorization', token);
+    res.status(204).send();
+  }
+  
+  static createTokenJWT(user) {
+    const payload = {
+      id: user.id,
+    };
+  
+    const token = jwt.sign(payload, 's');
+  
+    return token;
+  }
 }
 
 module.exports = UserController;

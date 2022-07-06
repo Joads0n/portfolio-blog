@@ -19,9 +19,5 @@ module.exports = {
         `${fild} é menor que o tamanho minimo exigido (mínimo caracteres = ${size}).`
       );
     }
-  },
-
-  notFound: (entity) => {
-    throw new Error(`Não foi localizado ${entity} na base de dados`)
   }
 };

@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       });
       if (resultEmail === null) {
-        throw validations.notFound("Email não localizado na base de dados");
+        throw new Error("Email não localizado na base de dados");
       }
       return resultEmail;
     }
