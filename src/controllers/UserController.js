@@ -139,7 +139,7 @@ class UserController {
       id: user.id,
     };
   
-    const token = jwt.sign(payload, 's');
+    const token = jwt.sign(payload, process.env.KEY_JWT);
   
     return token;
   }
