@@ -21,12 +21,25 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async addPassword(password) {
-      validations.emptyStringField(password, 'Senha');
-      validations.maximumSizeField(password, 'Senha', 60);
-      validations.minimumSizeField(password, 'Senha', 8);
+      validations.emptyStringField(password, "Senha");
+      validations.maximumSizeField(password, "Senha", 60);
+      validations.minimumSizeField(password, "Senha", 8);
 
       return await this.generatePasswordHash(password);
     }
+
+    static async buscarEmail(email) {
+      const resultEmail = await User.findOne({
+        where: {
+          email: email,
+        },
+      });
+      if (resultEmail === null) {
+        throw validations.notFound("Email não localizado na base de dados");
+      }
+      return resultEmail;
+    }
+
   }
 
   User.init(

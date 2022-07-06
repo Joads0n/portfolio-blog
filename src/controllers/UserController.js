@@ -1,10 +1,11 @@
 const models = require('../models');
-const User = require('../models/user')
+const User = require('../models/user');
+
 class UserController {
   static async listUsers(req, res) {
     try {
       const users = await models.User.findAll();
-      return res.status(200).json( users );
+      return res.status(200).json(users);
     } catch (error) {
       return res.status(500).json({ Error: error.message });
     }
@@ -15,7 +16,7 @@ class UserController {
     try {
       const user = await models.User.findOne({
         where: {
-          id: Number(id)
+          id: Number(id),
         },
       });
       return res.status(200).json(user);
@@ -26,7 +27,7 @@ class UserController {
 
   static async createUser(req, res) {
     const { name, birthdate, email, password, role_id } = req.body;
-    const formattedDate = birthdate.split('/').reverse().join('-');
+    const formattedDate = birthdate.split("/").reverse().join("-");
 
     try {
       const passwordHash = await models.User.addPassword(password);
@@ -37,7 +38,7 @@ class UserController {
         password: passwordHash,
         role_id: Number(role_id),
       });
-      
+
       return res.status(201).json(user);
     } catch (error) {
       return res.status(500).json({ Error: error.message });
@@ -64,21 +65,23 @@ class UserController {
       return res.status(500).json({ Error: error.message });
     }
   }
-  
+
   static async deleteUser(req, res) {
     const { id } = req.params;
     try {
-      models.sequelize.transaction(async transaction => {
-        models.User.destroy({
-          where: {
-            id,
+      models.sequelize.transaction(async (transaction) => {
+        models.User.destroy(
+          {
+            where: {
+              id,
+            },
           },
-        }, { transaction: transaction});
+          { transaction: transaction }
+        );
         return res
           .status(200)
           .json(`Usuário de id = ${id} foi deletado com sucesso`);
-        
-      })
+      });
     } catch (error) {
       return res.status(500).json({ Error: error.message });
     }
@@ -92,7 +95,9 @@ class UserController {
           id,
         },
       });
-      return res.status(201).json(`Usuário de id = ${id} foi restaurado com sucesso`);
+      return res
+        .status(201)
+        .json(`Usuário de id = ${id} foi restaurado com sucesso`);
     } catch (error) {
       return res.status(500).json({ Error: error.message });
     }
@@ -107,13 +112,32 @@ class UserController {
           editor_id: Number(editorId),
         },
         limit: 5,
-        order: [['createdAt', 'DESC']]
+        order: [["createdAt", "DESC"]],
       });
       return res.status(200).json(allPostUser);
     } catch (error) {
       return res.status(500).json({ Error: error.message });
     }
   }
+
+  static async login(req, res) {
+    res.status(204).send();
+  }
+
+  // static async findEmail(req, res) {
+  //   const { email } = req.body;
+  //   console.log(`email ${email}`)
+  //   try {
+  //     const user = await models.User.findOne({
+  //       where: {
+  //         email: email
+  //       },
+  //     });
+  //     return res.status(200).json(user.birthdate);
+  //   } catch (error) {
+  //     return res.status(500).json({ Error: error.message });
+  //   }
+  // }
 }
 
 module.exports = UserController;
