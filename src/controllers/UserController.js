@@ -139,7 +139,7 @@ class UserController {
       id: user.id,
     };
   
-    const token = jwt.sign(payload, process.env.KEY_JWT);
+    const token = jwt.sign(payload, process.env.KEY_JWT, { expiresIn: '15m' });
   
     return token;
   }
