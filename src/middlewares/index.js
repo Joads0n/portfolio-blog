@@ -15,5 +15,21 @@ module.exports = {
       req.user = user;
       return next();
     })(req, res, next);
-  }     
+  },
+
+  bearer: (req, res, next) => {
+    passport.authenticate("bearer", { session: false }, (error, user, info) => {
+      if (error && error.name === 'JsonwebTokenError') {
+        return res.status(401).json({ Error: error.message });
+      }
+      if (error) {
+        return res.status(500).json({ Error: error.message });
+      }
+      if (!user) {
+        return res.status(401).json();
+      }
+      req.user = user;
+      return next();
+    })(req, res, next);
+  }
 }

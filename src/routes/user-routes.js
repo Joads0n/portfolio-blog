@@ -1,16 +1,11 @@
-const passport = require('passport');
 const { Router } = require('express');
-const UserController = require('../controllers/UserController');
 const middlewaresAuth = require('../middlewares');
+const UserController = require('../controllers/UserController');
 
 const router = Router();
 
 router
-  .get(
-    "/usuarios",
-    passport.authenticate("bearer", { session: false }),
-    UserController.listUsers
-  )
+  .get("/usuarios", middlewaresAuth.bearer, UserController.listUsers)
   .get("/usuario/:id", UserController.findUserId)
   .get("/usuario/:editorId/posts", UserController.getPoststoUser)
   .post("/cadastro", UserController.createUser)
