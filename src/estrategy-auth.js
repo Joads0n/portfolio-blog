@@ -6,6 +6,14 @@ const BearerStrategy = require('passport-http-bearer');
 
 const models = require('./models/');
 
+async function verifyUser(email) {
+    const user = await models.User.buscarEmail(email);
+    if (user === null) {
+        throw new Error("Email não localizado na base de dados");
+    }
+    return user;
+}
+
 async function verifyPassword(password, passwordHash) {
     const validPassword = await bcrypt.compare(password, passwordHash);
 
@@ -21,7 +29,7 @@ passport.use(
         session: false
     }, async (email, password, done) => {
         try {
-            const user = await models.User.buscarEmail(email);
+            const user = await verifyUser(email);
             await verifyPassword(password, user.password);
             
             done(null, user);

@@ -1,6 +1,7 @@
 const passport = require('passport');
 const { Router } = require('express');
 const UserController = require('../controllers/UserController');
+const middlewaresAuth = require('../middlewares');
 
 const router = Router();
 
@@ -16,11 +17,7 @@ router
   .post("/usuario/:id/restaura", UserController.restoreUser)
   .put("/usuario/:id", UserController.updateUser)
   .delete("/usuario/:id", UserController.deleteUser)
-  .post(
-    "/usuario/login",
-    passport.authenticate("local", { session: false }),
-    UserController.login
-  );
+  .post("/usuario/login", middlewaresAuth.local, UserController.login);
 
   
 module.exports = router;

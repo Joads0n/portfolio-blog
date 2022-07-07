@@ -2,7 +2,7 @@
 
 const { Model } = require('sequelize');
 const bcrypt = require('bcrypt');
-const validations = require('../Errors');
+const validations = require('../errors');
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -28,15 +28,18 @@ module.exports = (sequelize, DataTypes) => {
       return await this.generatePasswordHash(password);
     }
 
+    /** Metodo não trata o erro caso o retorno da busca seja null */
     static async buscarEmail(email) {
       const user = await User.findOne({
         where: {
           email: email,
         },
       });
-      if(user === null) {
-        throw new Error("Email não localizado na base de dados");
-      }
+
+      // if(user === null) {
+      //   throw new Error("Email não localizado na base de dados");
+      // }
+
       return user;
     }
 
